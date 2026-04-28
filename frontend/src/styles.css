@@ -40,15 +40,6 @@ input {
   line-height: 1.6;
 }
 
-.eyebrow {
-  margin-bottom: 8px !important;
-  color: #3154d4 !important;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 13px;
-}
-
 .card {
   background: #fff;
   border: 1px solid #dde4ef;
