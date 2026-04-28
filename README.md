@@ -2,10 +2,6 @@
 
 Spring Boot + React application for identifying the pair of employees who worked together on common projects for the longest total period of time.
 
-Repository name format requested by the task: `{FirstName}-{LastName}-employees`.
-
-This project is prepared as: `Simeon-Atanasov-employees`.
-
 ## Requirements covered
 
 - Loads input data from a CSV file.
@@ -276,72 +272,4 @@ The collaboration algorithm works in these steps:
 6. Aggregate overlap days by employee pair and project.
 7. Return the pair with the highest total number of days.
 
-This is more robust than a direct raw row-to-row comparison because it avoids double-counting duplicate or overlapping rows for the same employee.
-
-## Future step: database
-
-A future version can add PostgreSQL and store previous analysis runs.
-
-Possible future entities:
-
-```text
-AnalysisRun
-UploadedFile
-EmployeeProjectAssignment
-CollaborationResult
-ProjectOverlapResult
-```
-
-Possible future endpoints:
-
-```http
-POST /api/analyses
-GET /api/analyses
-GET /api/analyses/{id}
-DELETE /api/analyses/{id}
-```
-
-Recommended tools for the future database step:
-
-- PostgreSQL
-- Spring Data JPA
-- Flyway migrations
-- Testcontainers for integration tests
-
-## Future step: security
-
-A future version can add Spring Security after database persistence exists.
-
-Possible additions:
-
-- JWT authentication
-- Per-user analysis history
-- Role-based access control
-- File size and content validation hardening
-- Audit logging
-- Rate limiting
-
-Suggested roles:
-
-```text
-USER  - upload CSV files and view own analyses
-ADMIN - view all analyses and system information
-```
-
-## GitHub delivery checklist
-
-Before submitting:
-
-```bash
-cd backend && mvn clean test
-cd ../frontend && npm install && npm run build
-cd .. && docker compose up --build
-```
-
-Then verify:
-
-- The UI opens on `http://localhost:3000`.
-- A valid CSV returns the correct pair and table.
-- An invalid CSV displays validation errors.
-- README instructions are correct.
-- Repository name follows `{FirstName}-{LastName}-employees`.
+This avoids double-counting duplicate or overlapping rows for the same employee.

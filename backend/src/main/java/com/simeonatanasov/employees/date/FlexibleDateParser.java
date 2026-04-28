@@ -55,7 +55,6 @@ public class FlexibleDateParser {
             try {
                 return LocalDateTime.parse(value, DateTimeFormatter.ISO_LOCAL_DATE_TIME).toLocalDate();
             } catch (DateTimeParseException ignored) {
-                // Try the configured date-only formatters below.
             }
         }
 
@@ -63,7 +62,6 @@ public class FlexibleDateParser {
             try {
                 return LocalDate.parse(value, formatter);
             } catch (DateTimeParseException ignored) {
-                // Try the next format.
             }
         }
 

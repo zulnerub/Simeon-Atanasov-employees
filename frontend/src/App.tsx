@@ -35,7 +35,6 @@ function App() {
   return (
     <main className="page">
       <header className="hero">
-        <p className="eyebrow">Spring Boot + React</p>
         <h1>Employee Collaboration Analyzer</h1>
         <p>
           Upload a CSV file and find the pair of employees who worked together on common projects
