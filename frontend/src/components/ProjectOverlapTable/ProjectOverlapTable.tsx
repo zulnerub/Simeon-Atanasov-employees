@@ -1,4 +1,4 @@
-import type { ProjectOverlap } from '../types/collaboration';
+import type { ProjectOverlap } from '../../types/collaboration';
 
 type ProjectOverlapTableProps = {
   projects: ProjectOverlap[];

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { analyzeFile } from './api/collaborationApi';
-import { ErrorPanel } from './components/ErrorPanel';
-import { FileUpload } from './components/FileUpload';
-import { ProjectOverlapTable } from './components/ProjectOverlapTable';
-import { ResultSummary } from './components/ResultSummary';
+import { ErrorPanel } from './components/ErrorPanel/ErrorPanel';
+import { FileUpload } from './components/FileUpload/FileUpload';
+import { ProjectOverlapTable } from './components/ProjectOverlapTable/ProjectOverlapTable';
+import { ResultSummary } from './components/ResultSummary/ResultSummary';
 import type { AnalyzeResponse, ApiErrorResponse } from './types/collaboration';
 import './styles.css';
 

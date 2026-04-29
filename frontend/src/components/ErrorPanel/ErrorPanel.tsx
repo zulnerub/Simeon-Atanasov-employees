@@ -1,4 +1,4 @@
-import type { ApiErrorResponse } from '../types/collaboration';
+import type { ApiErrorResponse } from '../../types/collaboration';
 
 type ErrorPanelProps = {
   error: ApiErrorResponse;
