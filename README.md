@@ -16,7 +16,7 @@ Spring Boot + React application for identifying the pair of employees who worked
   - Days worked
 - Supports multiple date formats.
 - Provides Docker Compose run option.
-- Includes backend tests and sample CSV files.
+- Includes backend and frontend tests, and sample CSV files.
 
 ## Architecture
 
@@ -49,6 +49,7 @@ Frontend:
 - React
 - TypeScript
 - Vite
+- Vitest / React Testing Library
 - Nginx for Docker runtime
 
 Infrastructure:
@@ -184,12 +185,12 @@ cd backend
 mvn clean test
 ```
 
-Frontend build check:
+Frontend tests:
 
 ```bash
 cd frontend
 npm install
-npm run build
+npm test
 ```
 
 ## API
