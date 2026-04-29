@@ -15,16 +15,17 @@ export function FileUpload({ selectedFile, analyzing, onFileSelected, onAnalyze 
 
       <div className="upload-row">
         <input
+          data-testid="file-input"
           type="file"
           accept=".csv,text/csv"
           onChange={(event) => onFileSelected(event.target.files?.[0] ?? null)}
         />
-        <button type="button" disabled={!selectedFile || analyzing} onClick={onAnalyze}>
+        <button data-testid="analyze-button" type="button" disabled={!selectedFile || analyzing} onClick={onAnalyze}>
           {analyzing ? 'Analyzing...' : 'Analyze'}
         </button>
       </div>
 
-      {selectedFile && <p className="selected-file">Selected file: {selectedFile.name}</p>}
+      {selectedFile && <p data-testid="selected-file" className="selected-file">Selected file: {selectedFile.name}</p>}
     </section>
   );
 }
