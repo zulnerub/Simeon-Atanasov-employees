@@ -1,5 +1,7 @@
 package com.simeonatanasov.employees.exception;
 
+import com.simeonatanasov.employees.model.CsvValidationError;
+
 import java.util.List;
 
 public class CsvParsingException extends RuntimeException {

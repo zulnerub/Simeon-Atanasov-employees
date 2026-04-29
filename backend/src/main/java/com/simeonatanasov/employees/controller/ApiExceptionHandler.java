@@ -42,7 +42,13 @@ public class ApiExceptionHandler {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<ApiErrorResponse> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException ex) {
         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
-                .body(new ApiErrorResponse("Uploaded file exceeds the maximum allowed size of " + ex.getMaxUploadSize()));
+                .body(new ApiErrorResponse("Uploaded file exceeds the maximum allowed size of " + formatSize(ex.getMaxUploadSize())));
+    }
+
+    private String formatSize(long bytes) {
+        if (bytes < 1024) return bytes + " B";
+        if (bytes < 1024 * 1024) return (bytes / 1024) + " KB";
+        return (bytes / (1024 * 1024)) + " MB";
     }
 
     /**

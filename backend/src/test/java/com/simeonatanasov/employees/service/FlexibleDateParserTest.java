@@ -1,23 +1,17 @@
 package com.simeonatanasov.employees.service;
 
+import com.simeonatanasov.employees.util.TestClock;
 import org.junit.jupiter.api.Test;
 
-import java.time.Clock;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
 import java.util.List;
 
+import static com.simeonatanasov.employees.util.TestClock.CURRENT_DATE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class FlexibleDateParserTest {
 
-    private final LocalDate CURRENT_DATE = LocalDate.parse("2024-01-20");
-
-    private final FlexibleDateParser parser = new FlexibleDateParser(
-            Clock.fixed(Instant.from(CURRENT_DATE), ZoneOffset.UTC)
-    );
+    private final FlexibleDateParser parser = new FlexibleDateParser(TestClock.fixedClock());
 
     @Test
     void shouldParseSupportedDateFormats() {

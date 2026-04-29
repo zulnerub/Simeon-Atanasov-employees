@@ -51,20 +51,24 @@ public class FlexibleDateParser {
 
     private LocalDate parse(String rawValue) {
         String value = rawValue.trim();
+        boolean anyFormatMatched = false;
 
-        return formatters.stream()
-                .filter(formatter -> findFormatter(formatter, value))
-                .findFirst()
-                .map(formatter -> parseLocalDate(rawValue, formatter, value))
-                .orElseThrow(() -> new IllegalArgumentException("Unrecognized date format: " + rawValue));
-    }
+        for (DateTimeFormatter formatter : formatters) {
+            if (!findFormatter(formatter, value)) {
+                continue;
+            }
+            anyFormatMatched = true;
+            try {
+                return LocalDate.parse(value, formatter);
+            } catch (DateTimeParseException e) {
+                // structurally matched but value invalid for this format — try the next one
+            }
+        }
 
-    private LocalDate parseLocalDate(String rawValue, DateTimeFormatter formatter, String value) {
-        try {
-            return LocalDate.parse(value, formatter);
-        } catch (DateTimeParseException e) {
+        if (anyFormatMatched) {
             throw new IllegalArgumentException("Invalid date provided: " + rawValue);
         }
+        throw new IllegalArgumentException("Unrecognized date format: " + rawValue);
     }
 
     private boolean findFormatter(DateTimeFormatter formatter, String value) {
