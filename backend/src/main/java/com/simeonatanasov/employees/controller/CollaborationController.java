@@ -17,18 +17,18 @@ import java.util.List;
 @RequestMapping("/api/collaborations")
 public class CollaborationController {
 
-    private final CsvWorkRecordParser parser;
-    private final CollaborationService service;
+    private final CsvWorkRecordParser csvWorkRecordParser;
+    private final CollaborationService collaborationService;
 
-    public CollaborationController(CsvWorkRecordParser parser, CollaborationService service) {
-        this.parser = parser;
-        this.service = service;
+    public CollaborationController(CsvWorkRecordParser csvWorkRecordParser, CollaborationService collaborationService) {
+        this.csvWorkRecordParser = csvWorkRecordParser;
+        this.collaborationService = collaborationService;
     }
 
     @PostMapping(value = "/analyze", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public AnalyzeResponse analyze(@RequestParam("file") MultipartFile file) {
-        List<WorkRecord> records = parser.parse(file);
-        return service.findLongestCollaboration(records)
+        List<WorkRecord> workRecords = csvWorkRecordParser.parse(file);
+        return collaborationService.findLongestCollaboration(workRecords)
                 .map(AnalyzeResponse::from)
                 .orElseGet(AnalyzeResponse::empty);
     }
