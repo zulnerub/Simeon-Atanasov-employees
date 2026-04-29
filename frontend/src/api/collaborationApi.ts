@@ -10,16 +10,14 @@ export async function analyzeFile(file: File): Promise<AnalyzeResponse> {
   });
 
   if (!response.ok) {
-    const fallbackError: ApiErrorResponse = {
-      message: 'The file could not be analyzed.',
-      errors: ['Unexpected error while communicating with the server.']
-    };
-
-    let apiError = fallbackError;
+    let apiError: ApiErrorResponse;
     try {
       apiError = await response.json();
     } catch {
-      // Keep fallback error.
+      apiError = {
+       message: 'The file could not be analyzed.',
+       errors: ['Unexpected error while communicating with the server.']
+      };
     }
 
     throw apiError;

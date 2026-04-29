@@ -50,8 +50,13 @@ function App() {
       />
 
       {error && <ErrorPanel error={error} />}
-      {result && <ResultSummary result={result} />}
-      {result && <ProjectOverlapTable projects={result.projects} />}
+      {result && (
+              <>
+                  <ResultSummary result={result} />
+                  <ProjectOverlapTable projects={result.projects} />
+              </>
+          )
+      }
     </main>
   );
 }
