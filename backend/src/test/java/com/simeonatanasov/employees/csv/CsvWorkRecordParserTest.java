@@ -3,8 +3,8 @@ package com.simeonatanasov.employees.csv;
 import com.simeonatanasov.employees.collaboration.WorkRecord;
 import com.simeonatanasov.employees.date.FlexibleDateParser;
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockMultipartFile;
 
-import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.time.Instant;
@@ -17,8 +17,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CsvWorkRecordParserTest {
 
+    private final LocalDate CURRENT_DATE = LocalDate.parse("2024-01-20");
+
     private final CsvWorkRecordParser parser = new CsvWorkRecordParser(
-            new FlexibleDateParser(Clock.fixed(Instant.parse("2024-01-20T00:00:00Z"), ZoneOffset.UTC))
+            new FlexibleDateParser(Clock.fixed(Instant.from(CURRENT_DATE), ZoneOffset.UTC))
     );
 
     @Test
@@ -29,7 +31,7 @@ class CsvWorkRecordParserTest {
                 218, 10, 2012-05-16, NULL
                 """;
 
-        List<WorkRecord> records = parser.parse(stream(csv));
+        List<WorkRecord> records = parser.parse(multipartFile(csv));
 
         assertThat(records).hasSize(2);
         assertThat(records.get(0)).isEqualTo(new WorkRecord(
@@ -38,7 +40,7 @@ class CsvWorkRecordParserTest {
                 LocalDate.of(2013, 11, 1),
                 LocalDate.of(2014, 1, 5)
         ));
-        assertThat(records.get(1).dateTo()).isEqualTo(LocalDate.of(2024, 1, 20));
+        assertThat(records.get(1).dateTo()).isEqualTo(CURRENT_DATE);
     }
 
     @Test
@@ -48,7 +50,7 @@ class CsvWorkRecordParserTest {
                 143, 12, 2013-11-01
                 """;
 
-        assertThatThrownBy(() -> parser.parse(stream(csv)))
+        assertThatThrownBy(() -> parser.parse(multipartFile(csv)))
                 .isInstanceOf(CsvParsingException.class)
                 .hasMessageContaining("CSV validation failed");
     }
@@ -61,7 +63,7 @@ class CsvWorkRecordParserTest {
                 218, 10, 2024-01-20, 2024-01-01
                 """;
 
-        assertThatThrownBy(() -> parser.parse(stream(csv)))
+        assertThatThrownBy(() -> parser.parse(multipartFile(csv)))
                 .isInstanceOf(CsvParsingException.class)
                 .satisfies(ex -> {
                     CsvParsingException csvEx = (CsvParsingException) ex;
@@ -71,7 +73,7 @@ class CsvWorkRecordParserTest {
                 });
     }
 
-    private ByteArrayInputStream stream(String value) {
-        return new ByteArrayInputStream(value.getBytes(StandardCharsets.UTF_8));
+    private MockMultipartFile multipartFile(String csv) {
+        return new MockMultipartFile("file", csv.getBytes(StandardCharsets.UTF_8));
     }
 }

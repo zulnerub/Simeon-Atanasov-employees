@@ -1,5 +1,6 @@
 package com.simeonatanasov.employees.collaboration;
 
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -29,8 +30,8 @@ class CollaborationServiceTest {
         assertThat(result.projects())
                 .extracting(ProjectOverlap::projectId, ProjectOverlap::daysWorked)
                 .containsExactlyInAnyOrder(
-                        org.assertj.core.groups.Tuple.tuple(10L, 6L),
-                        org.assertj.core.groups.Tuple.tuple(20L, 5L)
+                        Tuple.tuple(10L, 6L),
+                        Tuple.tuple(20L, 5L)
                 );
     }
 

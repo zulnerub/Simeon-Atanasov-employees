@@ -11,18 +11,18 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
+
+import static com.simeonatanasov.employees.csv.CsvHeader.*;
 
 @Component
 public class CsvWorkRecordParser {
-
-    private static final Set<String> REQUIRED_HEADERS = Set.of("EmpID", "ProjectID", "DateFrom", "DateTo");
 
     private final FlexibleDateParser dateParser;
 
@@ -42,24 +42,19 @@ public class CsvWorkRecordParser {
         }
     }
 
-    public List<WorkRecord> parse(InputStream inputStream) {
-        try (Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-             CSVParser csvParser = CSVFormat.DEFAULT.builder()
-                     .setHeader()
-                     .setSkipHeaderRecord(true)
-                     .setTrim(true)
-                     .setIgnoreSurroundingSpaces(true)
-                     .setIgnoreHeaderCase(false)
-                     .build()
-                     .parse(reader)) {
-
+    private List<WorkRecord> parse(InputStream inputStream) {
+        try (CSVParser csvParser = buildParser(inputStream)) {
             validateHeaders(csvParser.getHeaderMap());
 
             List<WorkRecord> records = new ArrayList<>();
             List<CsvValidationError> errors = new ArrayList<>();
 
             for (CSVRecord csvRecord : csvParser) {
-                parseRecord(csvRecord, records, errors);
+                try {
+                    records.add(parseRecord(csvRecord));
+                } catch (Exception ex) {
+                    errors.add(new CsvValidationError(csvRecord.getRecordNumber() + 1, ex.getMessage()));
+                }
             }
 
             if (!errors.isEmpty()) {
@@ -76,14 +71,26 @@ public class CsvWorkRecordParser {
         }
     }
 
+    private CSVParser buildParser(InputStream inputStream) throws IOException {
+        return CSVFormat.DEFAULT.builder()
+                .setHeader()
+                .setSkipHeaderRecord(true)
+                .setTrim(true)
+                .setIgnoreSurroundingSpaces(true)
+                .setIgnoreHeaderCase(false)
+                .build()
+                .parse(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+    }
+
     private void validateHeaders(Map<String, Integer> headerMap) {
         if (headerMap == null || headerMap.isEmpty()) {
             throw new CsvParsingException("CSV file must contain a header row.");
         }
 
-        List<CsvValidationError> errors = REQUIRED_HEADERS.stream()
-                .filter(header -> !headerMap.containsKey(header))
-                .map(header -> new CsvValidationError(1, "Missing required header: " + header))
+        List<CsvValidationError> errors = Arrays.stream(CsvHeader.values())
+                .map(Enum::name)
+                .filter(headerName -> !headerMap.containsKey(headerName))
+                .map(headerName -> new CsvValidationError(1, "Missing required header: " + headerName))
                 .toList();
 
         if (!errors.isEmpty()) {
@@ -91,34 +98,27 @@ public class CsvWorkRecordParser {
         }
     }
 
-    private void parseRecord(CSVRecord csvRecord, List<WorkRecord> records, List<CsvValidationError> errors) {
-        long lineNumber = csvRecord.getRecordNumber() + 1;
-
-        try {
-            long employeeId = parsePositiveLong(csvRecord.get("EmpID"), "EmpID");
-            long projectId = parsePositiveLong(csvRecord.get("ProjectID"), "ProjectID");
-            LocalDate dateFrom = dateParser.parseDateFrom(csvRecord.get("DateFrom"));
-            LocalDate dateTo = dateParser.parseDateTo(csvRecord.get("DateTo"));
-
-            records.add(new WorkRecord(employeeId, projectId, dateFrom, dateTo));
-        } catch (Exception ex) {
-            errors.add(new CsvValidationError(lineNumber, ex.getMessage()));
-        }
+    private WorkRecord parseRecord(CSVRecord csvRecord) {
+        long employeeId = parsePositiveLong(csvRecord.get(EmpID), EmpID);
+        long projectId = parsePositiveLong(csvRecord.get(ProjectID), ProjectID);
+        LocalDate dateFrom = dateParser.parseDateFrom(csvRecord.get(DateFrom));
+        LocalDate dateTo = dateParser.parseDateTo(csvRecord.get(DateTo));
+        return new WorkRecord(employeeId, projectId, dateFrom, dateTo);
     }
 
-    private long parsePositiveLong(String value, String fieldName) {
+    private long parsePositiveLong(String value, CsvHeader field) {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException(fieldName + " is required.");
+            throw new IllegalArgumentException(field + " is required.");
         }
 
         try {
             long parsed = Long.parseLong(value.trim());
             if (parsed <= 0) {
-                throw new IllegalArgumentException(fieldName + " must be positive.");
+                throw new IllegalArgumentException(field + " must be positive value.");
             }
             return parsed;
         } catch (NumberFormatException ex) {
-            throw new IllegalArgumentException(fieldName + " must be numeric.");
+            throw new IllegalArgumentException(field + " must be numeric value.");
         }
     }
 }

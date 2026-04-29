@@ -2,9 +2,9 @@ package com.simeonatanasov.employees.date;
 
 import org.springframework.stereotype.Component;
 
+import java.text.ParsePosition;
 import java.time.Clock;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
@@ -21,6 +21,7 @@ public class FlexibleDateParser {
         this.clock = clock;
         this.formatters = List.of(
                 DateTimeFormatter.ISO_LOCAL_DATE,
+                DateTimeFormatter.ISO_LOCAL_DATE_TIME,
                 formatter("uuuu/MM/dd"),
                 formatter("uuuu.MM.dd"),
                 formatter("dd-MM-uuuu"),
@@ -51,21 +52,24 @@ public class FlexibleDateParser {
     private LocalDate parse(String rawValue) {
         String value = rawValue.trim();
 
-        if (value.contains("T")) {
-            try {
-                return LocalDateTime.parse(value, DateTimeFormatter.ISO_LOCAL_DATE_TIME).toLocalDate();
-            } catch (DateTimeParseException ignored) {
-            }
-        }
+        return formatters.stream()
+                .filter(formatter -> findFormatter(formatter, value))
+                .findFirst()
+                .map(formatter -> parseLocalDate(rawValue, formatter, value))
+                .orElseThrow(() -> new IllegalArgumentException("Unrecognized date format: " + rawValue));
+    }
 
-        for (DateTimeFormatter formatter : formatters) {
-            try {
-                return LocalDate.parse(value, formatter);
-            } catch (DateTimeParseException ignored) {
-            }
+    private LocalDate parseLocalDate(String rawValue, DateTimeFormatter formatter, String value) {
+        try {
+            return LocalDate.parse(value, formatter);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Invalid date provided: " + rawValue);
         }
+    }
 
-        throw new IllegalArgumentException("Unsupported date format: " + rawValue);
+    private boolean findFormatter(DateTimeFormatter formatter, String value) {
+        ParsePosition pos = new ParsePosition(0);
+        return formatter.parseUnresolved(value, pos) != null && pos.getIndex() == value.length();
     }
 
     private DateTimeFormatter formatter(String pattern) {

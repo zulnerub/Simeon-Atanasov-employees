@@ -13,8 +13,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class FlexibleDateParserTest {
 
+    private final LocalDate CURRENT_DATE = LocalDate.parse("2024-01-20");
+
     private final FlexibleDateParser parser = new FlexibleDateParser(
-            Clock.fixed(Instant.parse("2024-01-20T00:00:00Z"), ZoneOffset.UTC)
+            Clock.fixed(Instant.from(CURRENT_DATE), ZoneOffset.UTC)
     );
 
     @Test
@@ -35,21 +37,28 @@ class FlexibleDateParserTest {
         );
 
         for (String value : values) {
-            assertThat(parser.parseDateFrom(value)).isEqualTo(LocalDate.of(2024, 1, 20));
+            assertThat(parser.parseDateFrom(value)).isEqualTo(CURRENT_DATE);
         }
     }
 
     @Test
     void shouldTreatNullDateToAsToday() {
-        assertThat(parser.parseDateTo("NULL")).isEqualTo(LocalDate.of(2024, 1, 20));
-        assertThat(parser.parseDateTo("null")).isEqualTo(LocalDate.of(2024, 1, 20));
-        assertThat(parser.parseDateTo(" ")).isEqualTo(LocalDate.of(2024, 1, 20));
+        assertThat(parser.parseDateTo("NULL")).isEqualTo(CURRENT_DATE);
+        assertThat(parser.parseDateTo("null")).isEqualTo(CURRENT_DATE);
+        assertThat(parser.parseDateTo(" ")).isEqualTo(CURRENT_DATE);
     }
 
     @Test
-    void shouldRejectUnsupportedDateFormat() {
+    void shouldRejectUnrecognizedDateFormat() {
+        assertThatThrownBy(() -> parser.parseDateFrom("2024|01|20"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Unrecognized date format");
+    }
+
+    @Test
+    void shouldRejectInvalidDate() {
         assertThatThrownBy(() -> parser.parseDateFrom("31-31-2024"))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Unsupported date format");
+                .hasMessageContaining("Invalid date provided");
     }
 }

@@ -14,8 +14,12 @@ public class CsvParsingException extends RuntimeException {
     public CsvParsingException(List<CsvValidationError> validationErrors) {
         super("CSV validation failed.");
         this.errors = validationErrors.stream()
-                .map(CsvValidationError::toString)
+                .map(CsvParsingException::generateExceptionMessage)
                 .toList();
+    }
+
+    private static String generateExceptionMessage(CsvValidationError e) {
+        return "Line " + e.lineNumber() + ": " + e.message();
     }
 
     public List<String> getErrors() {
