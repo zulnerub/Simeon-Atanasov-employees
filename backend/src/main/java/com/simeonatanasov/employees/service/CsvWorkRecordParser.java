@@ -1,7 +1,9 @@
-package com.simeonatanasov.employees.csv;
+package com.simeonatanasov.employees.service;
 
-import com.simeonatanasov.employees.collaboration.WorkRecord;
-import com.simeonatanasov.employees.date.FlexibleDateParser;
+import com.simeonatanasov.employees.enums.CsvHeader;
+import com.simeonatanasov.employees.exception.CsvParsingException;
+import com.simeonatanasov.employees.exception.CsvValidationError;
+import com.simeonatanasov.employees.model.WorkRecord;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -18,8 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-
-import static com.simeonatanasov.employees.csv.CsvHeader.*;
+import static com.simeonatanasov.employees.enums.CsvHeader.*;
 
 @Component
 public class CsvWorkRecordParser {

@@ -1,5 +1,9 @@
-package com.simeonatanasov.employees.collaboration;
+package com.simeonatanasov.employees.service;
 
+import com.simeonatanasov.employees.model.CollaborationResult;
+import com.simeonatanasov.employees.model.EmployeePair;
+import com.simeonatanasov.employees.model.ProjectOverlap;
+import com.simeonatanasov.employees.model.WorkRecord;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
 

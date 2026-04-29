@@ -1,4 +1,4 @@
-package com.simeonatanasov.employees.web;
+package com.simeonatanasov.employees.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

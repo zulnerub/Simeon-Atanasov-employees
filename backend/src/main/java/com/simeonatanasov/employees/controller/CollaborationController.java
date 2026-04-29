@@ -1,9 +1,9 @@
-package com.simeonatanasov.employees.web;
+package com.simeonatanasov.employees.controller;
 
-import com.simeonatanasov.employees.collaboration.CollaborationResult;
-import com.simeonatanasov.employees.collaboration.CollaborationService;
-import com.simeonatanasov.employees.collaboration.WorkRecord;
-import com.simeonatanasov.employees.csv.CsvWorkRecordParser;
+import com.simeonatanasov.employees.dto.AnalyzeResponse;
+import com.simeonatanasov.employees.model.WorkRecord;
+import com.simeonatanasov.employees.service.CollaborationService;
+import com.simeonatanasov.employees.service.CsvWorkRecordParser;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

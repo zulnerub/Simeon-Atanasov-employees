@@ -1,4 +1,4 @@
-package com.simeonatanasov.employees.collaboration;
+package com.simeonatanasov.employees.model;
 
 import java.time.LocalDate;
 

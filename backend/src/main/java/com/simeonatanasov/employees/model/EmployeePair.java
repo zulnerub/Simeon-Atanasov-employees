@@ -1,4 +1,4 @@
-package com.simeonatanasov.employees.collaboration;
+package com.simeonatanasov.employees.model;
 
 public record EmployeePair(long employeeId1, long employeeId2) {
     public EmployeePair {

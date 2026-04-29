@@ -1,10 +1,10 @@
-package com.simeonatanasov.employees.collaboration;
+package com.simeonatanasov.employees.model;
 
 import java.util.List;
 
 public record CollaborationResult(
-        EmployeePair pair,
         long totalDaysWorked,
+        EmployeePair pair,
         List<ProjectOverlap> projects
 ) {
     public CollaborationResult {

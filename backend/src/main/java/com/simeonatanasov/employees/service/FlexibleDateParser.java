@@ -1,4 +1,4 @@
-package com.simeonatanasov.employees.date;
+package com.simeonatanasov.employees.service;
 
 import org.springframework.stereotype.Component;
 

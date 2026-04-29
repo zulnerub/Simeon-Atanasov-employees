@@ -1,6 +1,6 @@
-package com.simeonatanasov.employees.web;
+package com.simeonatanasov.employees.dto;
 
-import com.simeonatanasov.employees.collaboration.CollaborationResult;
+import com.simeonatanasov.employees.model.CollaborationResult;
 
 import java.util.List;
 

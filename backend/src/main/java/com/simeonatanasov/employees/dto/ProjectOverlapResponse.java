@@ -1,6 +1,6 @@
-package com.simeonatanasov.employees.web;
+package com.simeonatanasov.employees.dto;
 
-import com.simeonatanasov.employees.collaboration.ProjectOverlap;
+import com.simeonatanasov.employees.model.ProjectOverlap;
 
 public record ProjectOverlapResponse(
         long employeeId1,

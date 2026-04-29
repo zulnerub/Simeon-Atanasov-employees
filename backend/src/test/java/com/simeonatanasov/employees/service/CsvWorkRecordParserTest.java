@@ -1,7 +1,7 @@
-package com.simeonatanasov.employees.csv;
+package com.simeonatanasov.employees.service;
 
-import com.simeonatanasov.employees.collaboration.WorkRecord;
-import com.simeonatanasov.employees.date.FlexibleDateParser;
+import com.simeonatanasov.employees.exception.CsvParsingException;
+import com.simeonatanasov.employees.model.WorkRecord;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 

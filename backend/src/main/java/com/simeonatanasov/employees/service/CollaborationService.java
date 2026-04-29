@@ -1,5 +1,10 @@
-package com.simeonatanasov.employees.collaboration;
+package com.simeonatanasov.employees.service;
 
+import com.simeonatanasov.employees.model.CollaborationResult;
+import com.simeonatanasov.employees.model.EmployeePair;
+import com.simeonatanasov.employees.model.ProjectOverlap;
+import com.simeonatanasov.employees.model.WorkInterval;
+import com.simeonatanasov.employees.model.WorkRecord;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -77,7 +82,7 @@ public class CollaborationService {
                         .thenComparingLong(ProjectOverlap::daysWorked))
                 .toList();
 
-        return new CollaborationResult(result.pair(), result.totalDaysWorked(), sortedProjects);
+        return new CollaborationResult(result.totalDaysWorked(), result.pair(), sortedProjects);
     }
 
     private List<WorkInterval> mergeIntervals(List<WorkInterval> intervals) {
@@ -167,7 +172,7 @@ public class CollaborationService {
                     .mapToLong(ProjectOverlap::daysWorked)
                     .sum();
 
-            return new CollaborationResult(pair, totalDaysWorked, projects);
+            return new CollaborationResult(totalDaysWorked, pair, projects);
         }
     }
 }

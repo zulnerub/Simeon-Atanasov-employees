@@ -1,4 +1,4 @@
-package com.simeonatanasov.employees.collaboration;
+package com.simeonatanasov.employees.model;
 
 public record ProjectOverlap(
         long employeeId1,

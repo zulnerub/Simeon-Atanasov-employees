@@ -1,4 +1,4 @@
-package com.simeonatanasov.employees.web;
+package com.simeonatanasov.employees.dto;
 
 import java.util.List;
 
